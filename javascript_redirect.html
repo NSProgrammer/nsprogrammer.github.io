@@ -13,7 +13,11 @@
      }
      var result = captured ? captured : '2000';
      var delay = +result;
-     window.setTimeout(function(){window.location.replace("http://www.nsprogrammer.com");}, delay);
+     if (delay > 0) {
+       window.setTimeout(function(){window.location.replace("http://www.nsprogrammer.com");}, delay);
+     } else {
+       window.location.replace("http://www.nsprogrammer.com");
+     }
   </script>
 </head>
 <html lang="en">
