@@ -6,7 +6,11 @@
   <meta name="author" content="NSProgrammer">
   <script>
      var url = window.location.href;
-     var captured = /delay=([^&]+)/.exec(url)[1];
+     var captured = NULL;
+     var capturedList = /delay=([^&]+)/.exec(url);
+     if (capturedList) {
+       captured = capturedList[1];
+     }
      var result = captured ? captured : '2000';
      var delay = +result;
      window.setTimeout(function(){window.location.replace("http://www.nsprogrammer.com");}, delay);
