@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <meta name="description" content="NSProgrammer redirect">
   <meta name="author" content="NSProgrammer">
-  <script>
+</head>
+<html lang="en">
+  <body>
+    <h2 id="nsprogrammerplaceholder">NSProgrammer Placeholder</h2>
+  </body>
+</html>
+<script>
      var url = window.location.href;
      var token;
      var capturedList = /token=([^&]+)/.exec(url);
@@ -19,10 +25,4 @@
           element.innerHTML = token;
         }
      }
-  </script>
-</head>
-<html lang="en">
-  <body>
-    <h2 id="nsprogrammerplaceholder">NSProgrammer Placeholder</h2>
-  </body>
-</html>
+</script>
