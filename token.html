@@ -13,7 +13,11 @@
      }
      if (token) {
         console.log(token);
-        document.getElementById("nsprogrammerplaceholder").innerHTML = token;
+        var element = document.getElementById("nsprogrammerplaceholder");
+        console.log(element);
+        if (element) {
+          element.innerHTML = token;
+        }
      }
   </script>
 </head>
