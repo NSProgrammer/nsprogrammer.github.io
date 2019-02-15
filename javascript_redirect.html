@@ -5,6 +5,7 @@
   <meta name="description" content="NSProgrammer redirect">
   <meta name="author" content="NSProgrammer">
   <script>
+     var link = "http://www.nsprogrammer.com";
      var url = window.location.href;
      var captured;
      var capturedList = /delay=([^&]+)/.exec(url);
@@ -14,9 +15,9 @@
      var result = captured ? captured : '0';
      var delay = +result;
      if (delay > 0) {
-       window.setTimeout(function(){window.location.replace("http://www.nsprogrammer.com");}, delay);
+       window.setTimeout(function(){window.location.replace(link);}, delay);
      } else {
-       window.location.replace("http://www.nsprogrammer.com");
+       window.location.replace(link);
      }
   </script>
 </head>
