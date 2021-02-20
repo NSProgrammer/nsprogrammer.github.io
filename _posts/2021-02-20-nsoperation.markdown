@@ -10,11 +10,7 @@ categories: jekyll update
 There are plenty of resources on [`NSOperation`](https://developer.apple.com/documentation/foundation/nsoperation) out in there,
 so it is probably just more noise in the ether.
 
-However, one of the things that I confront in every code base I've ever encountered is
-the need for a solid understanding of how to properly subclass `NSOperation`,
-so that all the benefits it offers can be leveraged.
-
-It is also one of the questions I get the most about from industry colleagues, because there's nuance and that makes it tough
+However, it is also one of the questions I get the most from industry colleagues, because there's nuance and that makes it tough
 to commit to memory or concretely discover with a Google search.
 
 So this post will not go into the benefits of `NSOperation` or give a history review of the API over the years or even
@@ -35,9 +31,9 @@ just keeping it on topic to *"how to subclass NSOperation"*.
   
 ## NSOperation Intro
 
-`NSOperation` API comes with a lot of great 
+`NSOperation` API comes with
 
-## 
+## Subclassing
 
 
 {% highlight objc %}
