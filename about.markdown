@@ -6,10 +6,10 @@ permalink: /about/
 
 ## The Blog
 
-NSProgrammer blog is a place for developer Nolan O'Brien to drop some posts as the mood strikes.
+NSProgrammer blog is a place for me to drop some posts as the mood strikes.
 It has no goals other than to capture thoughts for posterity and reference.
 
-## About the Dev
+## The Dev
 
 My name is Nolan O'Brien, and I'm a Canadian software developer living in Las Vegas with my wife and 5 kids.
 I like hockey 🏒, whisky 🥃, 80s movies 🍿 and 80s vinyl records 🎵.
