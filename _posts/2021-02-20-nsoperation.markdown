@@ -1,29 +1,47 @@
 ---
 layout: post
-title:  "NSOperation subclassing"
+title:  "NSOperation Subclassing"
 date:   2021-02-20 12:00:00 -0800
 categories: jekyll update
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+## Why this post?
 
-`YEAR-MONTH-DAY-title.MARKUP`
+There are plenty of resources on [`NSOperation`](https://developer.apple.com/documentation/foundation/nsoperation) out in there,
+so it is probably just more noise in the ether.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+However, one of the things that I confront in every code base I've ever encountered is
+the need for a solid understanding of how to properly subclass `NSOperation`,
+so that all the benefits it offers can be leveraged.
 
-Jekyll also offers powerful support for code snippets:
+It is also one of the questions I get the most about from industry colleagues, because there's nuance and that makes it tough
+to commit to memory or concretely discover with a Google search.
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+So this post will not go into the benefits of `NSOperation` or give a history review of the API over the years or even
+provide examples of using the API... it is just going to document how to subclass `NSOperation` so that it can be used
+for your use cases.
+
+## Short NSOperation Preamble 
+
+Having used `NSOperation` since its introduction *Mac OS X 10.5*, I have seen it go through some bumpy rides.
+It definitely has a history of bugs that have hurt the developer community's perception for this API, but as of *iOS 10* / *macOS 10.12*
+it has stabilized and is very much *the* way to organize large units of work on Apple platforms.
+As interesting as going through the history of problems would be, that is in the past and we can focus on it being solid now.
+That's means (at the time of this post) there are 5 releases worth of rock solid support, so it isn't the same risk as it has been in the past.
+
+Putting everything "substantial" in an `NSOperation` gives you many features to leverage that would be complicated to build on your own,
+not to mention inefficient compared to Apple's own optimized API.  I'm not going to go through the benefits or features in this post,
+just keeping it on topic to *"how to subclass NSOperation"*.
+  
+## NSOperation Intro
+
+`NSOperation` API comes with a lot of great 
+
+## 
+
+
+{% highlight objc %}
+@interface NSOperation : NSObject
+@end
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
