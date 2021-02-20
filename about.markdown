@@ -4,15 +4,14 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+## The Blog
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+NSProgrammer blog is a place for developer Nolan O'Brien to drop some posts as the mood strikes.
+It has no goals other than to capture thoughts for posterity and reference.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+## About the Dev
 
-
-[jekyll-organization]: https://github.com/jekyll
+My name is Nolan O'Brien, and I'm a Canadian software developer living in Las Vegas with my wife and 5 kids.
+I like hockey 🏒, whisky 🥃, 80s movies 🍿 and 80s vinyl records 🎵.
+I have been developing software professionally for Apple platforms since 2004 with a bunch of time spent on
+embedded systems, Win32 and Linux/Unix.
