@@ -21,7 +21,7 @@
 title: NSProgrammer
 email: nsprogrammer@nsprogrammer.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Nolan O'Brien has been a software developer on Apple platforms since 2004.
+  An "blog" to drop some tidbits whenever the urge presents itself.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: nolanobrien

@@ -5,8 +5,3 @@
 layout: home
 ---
 
-# Title
-
-## Subtitle
-
-Content content content
