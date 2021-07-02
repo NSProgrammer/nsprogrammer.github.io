@@ -29,7 +29,7 @@ Putting everything "substantial" in an `NSOperation` gives you many features to 
 not to mention inefficient compared to Apple's own optimized API.  I'm not going to go through the benefits or features in this post,
 just keeping it on topic to *"how to subclass NSOperation"*.
 
-### Note on `async await`
+### Note on _async await_
 
 The new `async await` available for iOS 15+ introduced at WWDC 2021 is an excellent addition to Swift that will
 offer a great deal of value to developers doing async and concurrent programming.  There is no competition between
@@ -114,7 +114,7 @@ Additionally, there is the `isCancelled` property.  By default, calling `cancel`
 As work is executing, the "working" part of the execution is responsible for checking `isCancelled` at appropriate places and
 finishing early (returning early for synchronous operations, and setting `isExecuting` to `NO` and `isFinished` to `YES` for asynchronous operations).
 
-## `isReady` specifically
+## _isReady_ specifically
 
 The `isReady` property deserves some special attention.  The property prevents the property from running in a queue until
 it is set to `YES`.  This property is effectively coupled to all the `dependencies` of the `NSOperation` being `isFinished == YES`.
@@ -203,7 +203,7 @@ You might be able to get away with only keeping your state values atomic, but un
 encapsulating state reads/writes with critical sections is going to be the simpler choice.
 
 Second, you'll also need to be sure that your critical sections support recursion.
-Since we are managing KVO as we update state, that can and will lead to accessing the KVO property while in the critical section.
+Since we are managing KVO as we update state, that will lead to accessing the KVO property while in the critical section (every `willChangeValueForKey:` and `didChangeValueForKey:` access the property of the given key).
 If you go with atomic state values instead of a critical section pattern, you won't need to worry about recursion (but the race conditions will be more of a risk).
 
 ### Objective-C Code
@@ -225,7 +225,7 @@ If you go with atomic state values instead of a critical section pattern, you wo
 - (instancetype)init
 {
     if (self = [super init]) {
-        _queue = ... however you get the queue to execute on, does not need to be serial ...
+        _queue = ... the queue to execute on ...;
     }
     return self;
 }
@@ -251,6 +251,11 @@ If you go with atomic state values instead of a critical section pattern, you wo
     @synchronized(self) {
         return _state.isCancelled;
     }
+}
+
+- (BOOL)isAsynchronous
+{
+    return YES;
 }
 
 #pragma mark Method Overrides
@@ -318,20 +323,20 @@ If you go with atomic state values instead of a critical section pattern, you wo
     const BOOL shouldStopExecuting = _state.isExecuting;
     
     if (shouldFinish) {
-        [self willChangeValueForKey:@"isFinished"]; // triggers a call to self.isFinished
+        [self willChangeValueForKey:@"isFinished"];
     }
     if (shouldStopExecuting) {
-        [self willChangeValueForKey:@"isExecuting"]; // triggers a call to self.isExecuting
+        [self willChangeValueForKey:@"isExecuting"];
     }
     
     _state.isFinished = YES;
     _state.isExecuting = NO;
     
     if (shouldStopExecuting) {
-        [self didChangeValueForKey:@"isExecuting"]; // triggers a call to self.isExecuting
+        [self didChangeValueForKey:@"isExecuting"];
     }
     if (shouldFinish) {
-        [self didChangeValueForKey:@"isFinished"]; // triggers a call to self.isFinished
+        [self didChangeValueForKey:@"isFinished"];
     }
 }
 
@@ -340,8 +345,141 @@ If you go with atomic state values instead of a critical section pattern, you wo
 
 ### Swift Code
 
+Implemented with `NSRecursiveLock`.  Same functionally as the Objective-C version.
+Can implement using `async/await` with Swift 5.5, but it will get somewhat messy with back and forth between
+async context and non-async contexts -- feel free to implement yourself and show me a clean implementation :)
+
 {% highlight swift %}
-// TODO
+class MyAsyncOperation: Operation {
+
+    struct State {
+        var isCancelled: Bool
+        var isExecuting: Bool
+        var isFinished: Bool
+    }
+    
+    private let state = State()
+    private let lock = NSRecursiveLock()
+    private let queue: DispatchQueue
+    
+    init() {
+        queue = ... the queue to execute on ...
+    }
+
+    // MARK: State Accessors
+
+    public override var isFinished: Bool {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        return self.state.isFinished
+    }
+    
+    public override var isExecuting: Bool {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        return self.state.isExecuting
+    }
+    
+    public override var isCancelled: Bool {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        return self.state.isCancelled
+    }
+
+    public override var isAsynchronous: Bool {
+        return true
+    }
+
+    // MARK: Method Overrides
+
+    public override func start() {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        guard !self.state.isCancelled else {
+            self.finish()
+            return
+        }
+        
+        self.willChangeValue(forKey: "isExecuting")
+        self.state.isExecuting = true
+        self.didChangeValue(forKey: "isExecuting")
+        
+        self.queue.async {
+            self.run()
+        }
+    }
+    
+    public override func cancel() {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        
+        if !self.state.isCancelled {
+            self.willChangeValue(forKey: "isCancelled")
+            self.state.isCancelled = true
+            self.didChangeValue(forKey: "isCancelled")
+            self.finish()
+        }
+    }
+
+    // MARK: Private Methods
+
+    private func run() { 
+        guard !self.isCancelled else {
+            return
+        }
+
+        ... do work ...
+        
+        guard !self.isCancelled else {
+            return
+        }
+        
+        ... do more work ...
+        
+        guard !self.isCancelled else {
+            return
+        }
+        
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        self.finish()
+    }
+
+    /* this func must be called from a safely synchronized critical section */
+    private func finish() {
+        let shouldFinish = !self.state.isFinished
+        let shouldStopExecuting = self.state.isExecuting
+        
+        if shouldFinish {
+            self.willChangeValue(forKey: "isFinished")
+        }
+        if shouldStopExecuting {
+            self.willChangeValue(forKey: "isExecuting")
+        }
+        
+        self.state.isFinished = true
+        self.state.isExecuting = false
+        
+        if shouldStopExecuting {
+            self.didChangeValue(forKey: "isExecuting")
+        }
+        if shouldFinish {
+            self.didChangeValue(forKey: "isFinished")
+        }
+    }
+
+}
 {% endhighlight %}
 
 
+### Final Thoughts
+
+`NSOperation` is a powerful way to encapsulate work and construct composition of work through dependencies and
+with the priority ordering of an `NSOperationQueue`.   It is reliable, flexible and extendable to your use cases.
+
+The biggest thing is to be sure you are properly implementing your `NSOperation` subclasses, which comes with a lot of nuance.
+Once you have it down once though, it is an easily repeatable process that can be leveraged at scale, especially if you abstract out the base implementation of an async operation.
