@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "NSOperation Subclassing"
-date:   2021-02-20 12:00:00 -0800
+date:   2021-07-02 12:00:00 -0800
 categories: jekyll update
 ---
 
