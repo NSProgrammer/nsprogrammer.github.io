@@ -35,7 +35,9 @@ The new `async await` available for iOS 15+ introduced at WWDC 2021 is an excell
 offer a great deal of value to developers doing async and concurrent programming.  There is no competition between
 `async await` and `NSOperation` though; saying that `NSOperation` is no longer useful since `async await` was
 introduced would be akin to saying `NSOperation` is no longer useful because `GCD` exists.  They serve different purposes
-and actually complement each other.  You can implement your `NSOperation` (`Operation` in Swift) using `async await` without issue!
+and actually complement each other.  ~~You can implement your `NSOperation` (`Operation` in Swift) using `async await` without issue!~~
+*Update:* I actually spent a good amount of time on this and can't figure out a way to implement `NSOperation` using `async await`... It is
+simple enough to use `NSOperation` from async contexts, but I could not get the KVO inside `NSOperation` to work using the new concurrency features of Swift 🤷‍♂️. 
 
 ## NSOperation Intro
 
@@ -347,8 +349,9 @@ If you go with atomic state values instead of a critical section pattern, you wo
 ### Swift Code
 
 Implemented with `NSRecursiveLock`.  Same functionally as the Objective-C version.
-Can implement using `async/await` with Swift 5.5, but it will get somewhat messy with back and forth between
-async contexts and non-async contexts -- feel free to share with me a clean implementation :)
+~~Can implement using `async/await` with Swift 5.5, but it will get somewhat messy with back and forth between
+async contexts and non-async contexts -- feel free to share with me a clean implementation :)~~
+*Update* I could not figure out how to implement `NSOperation` in Swift using `async await` -- if you can, please share!
 
 {% highlight swift %}
 class MyAsyncOperation: Operation {
