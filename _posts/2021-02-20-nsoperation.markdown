@@ -193,17 +193,18 @@ Asynchronous `NSOperation` subclassing has a lot more nuance to it.
 
 Instead of overriding `main`, you will override `start`.  You also need to override the state properties.
 
-It is important to keep things thread safety, you don't know what thread any of the state accessors will be called from.
+It is important to keep things thread safe, you don't know what thread any of the state accessors will be called from.
 In my sample implementations, I will use `@synchronized(self)` which effectively yields a recursive pthread mutex
 under the hood.  If you want to use a different synchronization mechanism, feel free, but keep a few things in mind.
 
-First, for maximum robustness, you will want to be able to encapsulate multiple reads and writes to different states values within in a critical section.
+First, for maximum robustness, you will want to encapsulate multiple reads and writes to different states values within in a critical section.
 That means making each state value atomic is insufficient for maximum thread safety.
 You might be able to get away with only keeping your state values atomic, but unless you can prove there is a performance need,
 encapsulating state reads/writes with critical sections is going to be the simpler choice.
 
 Second, you'll also need to be sure that your critical sections support recursion.
-Since we are managing KVO as we update state, that will lead to accessing the KVO property while in the critical section (every `willChangeValueForKey:` and `didChangeValueForKey:` access the property of the given key).
+Since we are managing KVO as we update state, that will lead to accessing the KVO property while in the critical section
+(every `willChangeValueForKey:` and `didChangeValueForKey:` call will access the property of the given key).
 If you go with atomic state values instead of a critical section pattern, you won't need to worry about recursion (but the race conditions will be more of a risk).
 
 ### Objective-C Code
@@ -347,7 +348,7 @@ If you go with atomic state values instead of a critical section pattern, you wo
 
 Implemented with `NSRecursiveLock`.  Same functionally as the Objective-C version.
 Can implement using `async/await` with Swift 5.5, but it will get somewhat messy with back and forth between
-async context and non-async contexts -- feel free to implement yourself and show me a clean implementation :)
+async contexts and non-async contexts -- feel free to share with me a clean implementation :)
 
 {% highlight swift %}
 class MyAsyncOperation: Operation {
@@ -476,7 +477,7 @@ class MyAsyncOperation: Operation {
 {% endhighlight %}
 
 
-### Final Thoughts
+## Final Thoughts
 
 `NSOperation` is a powerful way to encapsulate work and construct composition of work through dependencies and
 with the priority ordering of an `NSOperationQueue`.   It is reliable, flexible and extendable to your use cases.
