@@ -265,7 +265,7 @@ If you go with atomic state values instead of a critical section pattern, you wo
 {
     @synchronized(self) {
         if (_state.isCancelled) {
-            [self _unsafe_finish];
+            [self _finish];
             return;
         }
         
@@ -313,7 +313,7 @@ If you go with atomic state values instead of a critical section pattern, you wo
     }
     
     @synchronized(self) {
-        [self _unsafe_finish];
+        [self _finish];
     }
 }
 
