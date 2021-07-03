@@ -118,7 +118,7 @@ finishing early (returning early for synchronous operations, and setting `isExec
 
 ## _isReady_ specifically
 
-The `isReady` property deserves some special attention.  The property prevents the property from running in a queue until
+The `isReady` property deserves some special attention.  The property prevents the operation from running in a queue until
 it is set to `YES`.  This property is effectively coupled to all the `dependencies` of the `NSOperation` being `isFinished == YES`.
 Unfortunately, the implementation details are hidden so if you override `isReady` in your subclass you will not be able to properly reflect
 the dependency graph so overriding `isReady` effectively means you are replacing the behavior with your own and the
